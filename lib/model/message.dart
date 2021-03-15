@@ -6,7 +6,7 @@ class Message {
   final bool fromMe;
   final String message;
   final String lang;
-  final DateTime date;
+  final Timestamp date;
 
   Message(
       {this.fromMessage,
@@ -33,7 +33,7 @@ class Message {
         fromMe = map['fromMe'],
         message = map['message'],
         lang = map['lang'],
-        date = (map['date'] as Timestamp).toDate();
+        date = map['date'];
 
   @override
   String toString() {

@@ -18,6 +18,7 @@ class Chat extends StatefulWidget {
 }
 
 class _ChatState extends State<Chat> {
+  ScrollController _scrollController = ScrollController();
   stt.SpeechToText _speech;
   bool _isListening = false;
 
@@ -55,9 +56,11 @@ class _ChatState extends State<Chat> {
                 }
                 List<Message> allMessages = snapshot.data;
                 return ListView.builder(
+                  reverse: true,
+                  controller: _scrollController,
                   itemCount: allMessages.length,
                   itemBuilder: (context, index) {
-                    return Text(allMessages[index].message);
+                    return _createChatBubble(allMessages[index]);
                   },
                 );
               },
@@ -107,6 +110,7 @@ class _ChatState extends State<Chat> {
                         width: 1.0,
                       ),
                     )),
+                    //Translate yaparken buraya bak !!! if else ile gönderceğin mesajı translate edip gönderirsin
                     child: IconButton(
                         icon: Icon(Icons.send),
                         splashColor: Colors.transparent,
@@ -125,6 +129,9 @@ class _ChatState extends State<Chat> {
 
                           if (result == true) {
                             _messageController.clear();
+                            _scrollController.animateTo(0.0,
+                                duration: Duration(milliseconds: 10),
+                                curve: Curves.easeOut);
                           }
                         }),
                   )
@@ -154,6 +161,66 @@ class _ChatState extends State<Chat> {
     } else {
       setState(() => _isListening = false);
       _speech.stop();
+    }
+  }
+
+  //translate için buraya da bakabilirsin
+
+  Widget _createChatBubble(Message currentMessage) {
+    Color _inComingMessageColor = Colors.blue;
+    Color _outGoingMessageColor = Colors.green;
+
+    var _myMessage = currentMessage.fromMe;
+
+    if (_myMessage) {
+      return Padding(
+        padding: EdgeInsets.all(8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                color: _outGoingMessageColor,
+              ),
+              padding: EdgeInsets.all(10),
+              margin: EdgeInsets.all(4),
+              child: Text(
+                currentMessage.message,
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ],
+        ),
+      );
+    } else {
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                CircleAvatar(
+                  backgroundImage: NetworkImage(widget.secondUser.photoURL),
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    color: _inComingMessageColor,
+                  ),
+                  padding: EdgeInsets.all(10),
+                  margin: EdgeInsets.all(4),
+                  child: Text(
+                    currentMessage.message,
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
     }
   }
 }
