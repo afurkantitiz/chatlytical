@@ -4,6 +4,7 @@ import 'package:chatlytical/model/message.dart';
 import 'package:chatlytical/model/user_model.dart';
 import 'package:chatlytical/viewmodel/user_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:provider/provider.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
@@ -19,6 +20,7 @@ class Chat extends StatefulWidget {
 
 class _ChatState extends State<Chat> {
   ScrollController _scrollController = ScrollController();
+  final FlutterTts flutterTts = FlutterTts();
   stt.SpeechToText _speech;
   bool _isListening = false;
 
@@ -164,6 +166,13 @@ class _ChatState extends State<Chat> {
     }
   }
 
+  Future _speak(String text) async {
+    await flutterTts.setLanguage("en-US");
+    await flutterTts.setPitch(0.4);
+    print(await flutterTts.getVoices);
+    await flutterTts.speak(text);
+  }
+
   //translate için buraya da bakabilirsin
 
   Widget _createChatBubble(Message currentMessage) {
@@ -194,31 +203,36 @@ class _ChatState extends State<Chat> {
         ),
       );
     } else {
-      return Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                CircleAvatar(
-                  backgroundImage: NetworkImage(widget.secondUser.photoURL),
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
-                    color: _inComingMessageColor,
+      return GestureDetector(
+        onDoubleTap: () {
+          _speak(currentMessage.message);
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  CircleAvatar(
+                    backgroundImage: NetworkImage(widget.secondUser.photoURL),
                   ),
-                  padding: EdgeInsets.all(10),
-                  margin: EdgeInsets.all(4),
-                  child: Text(
-                    currentMessage.message,
-                    style: TextStyle(color: Colors.white),
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      color: _inComingMessageColor,
+                    ),
+                    padding: EdgeInsets.all(10),
+                    margin: EdgeInsets.all(4),
+                    child: Text(
+                      currentMessage.message,
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+            ],
+          ),
         ),
       );
     }
