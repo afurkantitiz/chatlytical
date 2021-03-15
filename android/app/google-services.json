@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "461108576743",
+    "project_id": "chatlytical-64a27",
+    "storage_bucket": "chatlytical-64a27.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:461108576743:android:a1e6223464c7936e24bd42",
+        "android_client_info": {
+          "package_name": "com.titiz.chatlytical"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "461108576743-eima4k7g3f1leno5d85qmsbjjldt9k54.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.titiz.chatlytical",
+            "certificate_hash": "73063c382723c9394365507283c4d5ceaa14df2b"
+          }
+        },
+        {
+          "client_id": "461108576743-r1l5vvte15if26vle5es2c46o9m7imq9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDGcOfommXyaVnBlRE7YhJ73Uq1VaXtTRI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "461108576743-r1l5vvte15if26vle5es2c46o9m7imq9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
