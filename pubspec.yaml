@@ -38,6 +38,7 @@ dependencies:
   avatar_glow: ^2.0.1
   speech_to_text: ^2.7.0
   flutter_tts: ^3.0.0
+  translator: ^0.1.6+1
 
 dev_dependencies:
   flutter_test:

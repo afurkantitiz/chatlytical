@@ -16,7 +16,7 @@ class _ProfilePageState extends State<ProfilePage> {
   TextEditingController _controllerUserName;
   TextEditingController _controllerLanguange;
   var _scaffoldKey = GlobalKey<ScaffoldState>();
-  String languageValue = 'tr';
+  String languageValue;
 
   @override
   void initState() {

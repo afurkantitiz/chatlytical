@@ -7,12 +7,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:provider/provider.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
+import 'package:translator/translator.dart';
 
 class Chat extends StatefulWidget {
-  final UserModel currentUser;
   final UserModel secondUser;
+  final UserModel currentUser;
 
-  const Chat({Key key, this.currentUser, this.secondUser}) : super(key: key);
+  Chat({Key key, this.currentUser, this.secondUser}) : super(key: key);
 
   @override
   _ChatState createState() => _ChatState();
@@ -23,6 +24,8 @@ class _ChatState extends State<Chat> {
   final FlutterTts flutterTts = FlutterTts();
   stt.SpeechToText _speech;
   bool _isListening = false;
+  GoogleTranslator translator = new GoogleTranslator();
+  var outputTranslateMessage;
 
   var _messageController;
 
@@ -112,7 +115,6 @@ class _ChatState extends State<Chat> {
                         width: 1.0,
                       ),
                     )),
-                    //Translate yaparken buraya bak !!! if else ile gönderceğin mesajı translate edip gönderirsin
                     child: IconButton(
                         icon: Icon(Icons.send),
                         splashColor: Colors.transparent,
@@ -167,13 +169,11 @@ class _ChatState extends State<Chat> {
   }
 
   Future _speak(String text) async {
-    await flutterTts.setLanguage("en-US");
+    await flutterTts.setLanguage(widget.currentUser.language);
     await flutterTts.setPitch(0.4);
     print(await flutterTts.getVoices);
     await flutterTts.speak(text);
   }
-
-  //translate için buraya da bakabilirsin
 
   Widget _createChatBubble(Message currentMessage) {
     Color _inComingMessageColor = Colors.blue;
@@ -204,8 +204,27 @@ class _ChatState extends State<Chat> {
       );
     } else {
       return GestureDetector(
-        onDoubleTap: () {
-          _speak(currentMessage.message);
+        onDoubleTap: () async {
+          outputTranslateMessage = await translator.translate(
+              currentMessage.message,
+              to: widget.currentUser.language);
+          _speak(outputTranslateMessage.toString());
+        },
+        onLongPress: () async {
+          outputTranslateMessage = await translator.translate(
+              currentMessage.message,
+              to: widget.currentUser.language);
+
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(outputTranslateMessage.toString()),
+            backgroundColor: Colors.purple[900],
+            elevation: 20,
+            // action: SnackBarAction(
+            //   label: 'Ok',
+            //   textColor: Colors.white,
+            //   onPressed: () {},
+            // ),
+          ));
         },
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -224,9 +243,14 @@ class _ChatState extends State<Chat> {
                     ),
                     padding: EdgeInsets.all(10),
                     margin: EdgeInsets.all(4),
-                    child: Text(
-                      currentMessage.message,
-                      style: TextStyle(color: Colors.white),
+                    child: Column(
+                      children: [
+                        Text(
+                          currentMessage.message,
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        // Text((cikti != null) ? cikti.toString() : ""),
+                      ],
                     ),
                   ),
                 ],
